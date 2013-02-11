@@ -34,8 +34,8 @@
 #define ALOGW
 #define ALOGW_IF
 
-#include <android/ALOG.h>
-#include <cutils/ALOG.h>
+#include <android/Log.h>
+#include <cutils/Log.h>
 #include <cutils/properties.h>
 #include "Camera.h"
 
