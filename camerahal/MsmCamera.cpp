@@ -17,6 +17,15 @@
 
 #define LOG_TAG "MsmCamera"
 
+#define ALOGD
+#define ALOGE
+#define ALOGV
+#define ALOG_IF
+#define ALOGE_IF
+#define ALOGW
+#define ALOGW_IF
+
+#include <android/log.h>
 #include "MsmCamera.h"
 #include "ParameterHelper.h"
 #include "Debug.h"

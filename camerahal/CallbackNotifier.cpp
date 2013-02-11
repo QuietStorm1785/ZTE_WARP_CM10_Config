@@ -19,9 +19,18 @@
  * via set_callbacks, enable_msg_type, and disable_msg_type camera HAL API.
  */
 
-//#define LOG_NDEBUG 0
-#define LOG_TAG "CallbackNotifier"
+//#define ALOG_NDEBUG 0
+#define ALOG_TAG "CallbackNotifier"
 #include <cutils/log.h>
+#define ALOGD
+#define ALOGE
+#define ALOGV
+#define ALOG_IF
+#define ALOGE_IF
+#define ALOGW
+#define ALOGW_IF
+
+#include <android/log.h>
 #include <media/stagefright/MetadataBufferType.h>
 #include "CameraDevice.h"
 #include "CallbackNotifier.h"
@@ -74,13 +83,13 @@ static int GetMessageStrings(uint32_t msg, const char** strings, int max)
     return out;
 }
 
-/* Logs messages, enabled by the mask. */
+/* ALOGs messages, enabled by the mask. */
 static void PrintMessages(uint32_t msg)
 {
     const char* strs[lCameraMessagesNum];
     const int translated = GetMessageStrings(msg, strs, lCameraMessagesNum);
     for (int n = 0; n < translated; n++) {
-        LOGV("    %s", strs[n]);
+        ALOGV("    %s", strs[n]);
     }
 }
 
@@ -113,7 +122,7 @@ void CallbackNotifier::setCallbacks(camera_notify_callback notify_cb,
                                     camera_request_memory get_memory,
                                     void* user)
 {
-    LOGV("%s: %p, %p, %p, %p (%p)",
+    ALOGV("%s: %p, %p, %p, %p (%p)",
          __FUNCTION__, notify_cb, data_cb, data_cb_timestamp, get_memory, user);
 
     Mutex::Autolock locker(&mObjectLock);
@@ -126,29 +135,29 @@ void CallbackNotifier::setCallbacks(camera_notify_callback notify_cb,
 
 void CallbackNotifier::enableMessage(uint msg_type)
 {
-    LOGV("%s: msg_type = 0x%x", __FUNCTION__, msg_type);
+    ALOGV("%s: msg_type = 0x%x", __FUNCTION__, msg_type);
     PrintMessages(msg_type);
 
     Mutex::Autolock locker(&mObjectLock);
     mMessageEnabler |= msg_type;
-    LOGV("**** Currently enabled messages:");
+    ALOGV("**** Currently enabled messages:");
     PrintMessages(mMessageEnabler);
 }
 
 void CallbackNotifier::disableMessage(uint msg_type)
 {
-    LOGV("%s: msg_type = 0x%x", __FUNCTION__, msg_type);
+    ALOGV("%s: msg_type = 0x%x", __FUNCTION__, msg_type);
     PrintMessages(msg_type);
 
     Mutex::Autolock locker(&mObjectLock);
     mMessageEnabler &= ~msg_type;
-    LOGV("**** Currently enabled messages:");
+    ALOGV("**** Currently enabled messages:");
     PrintMessages(mMessageEnabler);
 }
 
 status_t CallbackNotifier::enableVideoRecording(int fps)
 {
-    LOGV("%s: FPS = %d", __FUNCTION__, fps);
+    ALOGV("%s: FPS = %d", __FUNCTION__, fps);
 
     Mutex::Autolock locker(&mObjectLock);
     mVideoRecEnabled = true;
@@ -160,7 +169,7 @@ status_t CallbackNotifier::enableVideoRecording(int fps)
 
 void CallbackNotifier::disableVideoRecording()
 {
-    LOGV("%s:", __FUNCTION__);
+    ALOGV("%s:", __FUNCTION__);
 
     Mutex::Autolock locker(&mObjectLock);
     mVideoRecEnabled = false;
@@ -215,7 +224,7 @@ void CallbackNotifier::onNextFrameAvailable(const void* frame,
             mDataCBTimestamp(timestamp, CAMERA_MSG_VIDEO_FRAME,
                                cam_buff, 0, mCBOpaque);
         } else {
-            LOGE("%s: Memory failure in CAMERA_MSG_VIDEO_FRAME", __FUNCTION__);
+            ALOGE("%s: Memory failure in CAMERA_MSG_VIDEO_FRAME", __FUNCTION__);
         }
     }
 
@@ -227,7 +236,7 @@ void CallbackNotifier::onNextFrameAvailable(const void* frame,
             mDataCB(CAMERA_MSG_PREVIEW_FRAME, cam_buff, 0, NULL, mCBOpaque);
             cam_buff->release(cam_buff);
         } else {
-            LOGE("%s: Memory failure in CAMERA_MSG_PREVIEW_FRAME", __FUNCTION__);
+            ALOGE("%s: Memory failure in CAMERA_MSG_PREVIEW_FRAME", __FUNCTION__);
         }
     }
 
@@ -262,10 +271,10 @@ void CallbackNotifier::onNextFrameAvailable(const void* frame,
                     mDataCB(CAMERA_MSG_COMPRESSED_IMAGE, jpeg_buff, 0, NULL, mCBOpaque);
                     jpeg_buff->release(jpeg_buff);
                 } else {
-                    LOGE("%s: Memory failure in CAMERA_MSG_VIDEO_FRAME", __FUNCTION__);
+                    ALOGE("%s: Memory failure in CAMERA_MSG_VIDEO_FRAME", __FUNCTION__);
                 }
             } else {
-                LOGE("%s: Compression failure in CAMERA_MSG_VIDEO_FRAME", __FUNCTION__);
+                ALOGE("%s: Compression failure in CAMERA_MSG_VIDEO_FRAME", __FUNCTION__);
             }
         }
     }

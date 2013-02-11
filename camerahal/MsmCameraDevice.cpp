@@ -20,6 +20,7 @@
 #include <fcntl.h>
 #include <linux/videodev2.h>
 
+#define ALOG_FUNCTION_NAME
 #define ALOGD
 #define ALOGE
 #define ALOGV

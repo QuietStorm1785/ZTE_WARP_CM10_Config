@@ -109,7 +109,7 @@ class MsmCameraDevice : public CameraDevice
                 {}
 
                 inline ~ConfigThread() {
-                    AALOGW_IF(mThreadControl >= 0 || mControlFD >= 0,
+                    ALOGW_IF(mThreadControl >= 0 || mControlFD >= 0,
                             "%s: Control FDs are opened in the destructor",
                             __FUNCTION__);
                     if (mThreadControl >= 0) {
