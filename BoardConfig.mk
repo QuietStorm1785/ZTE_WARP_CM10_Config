@@ -25,7 +25,7 @@
 # against the traditional rules of inheritance).
 
 # Camera
-TARGET_PROVIDES_CAMERA_HAL := true
+#TARGET_PROVIDES_CAMERA_HAL := true
 #COMMON_GLOBAL_CFLAGS += -DICS_CAMERA_BLOB
 BOARD_NEEDS_MEMORYHEAPPMEM := true
 #BUILD_LIBCAMERA := true
